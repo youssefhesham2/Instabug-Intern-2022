@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/header_item"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#F1FEFF"
-    android:gravity="center"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/tv_header_key"
-        style="@style/TextAppearance.AppCompat.Small"
-        android:layout_width="0dp"
+    <data></data>
+
+    <LinearLayout
+        android:id="@+id/header_item"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="@string/header_key_hint"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="#000" />
+        android:background="#F1FEFF"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/tv_header_value"
-        style="@style/TextAppearance.AppCompat.Small"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:hint="@string/header_value_hint"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="#000" />
+        <EditText
+            android:id="@+id/tv_header_key"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/header_key_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000" />
 
-    <ImageView
-        android:id="@+id/img_delete_header_field"
-        android:layout_width="40sp"
-        android:layout_height="40sp"
-        android:src="@drawable/close_icon" />
-</LinearLayout>
+        <EditText
+            android:id="@+id/tv_header_value"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/header_value_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000" />
+
+        <ImageView
+            android:id="@+id/img_delete_header_field"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:src="@drawable/close_icon" />
+    </LinearLayout>
+</layout>

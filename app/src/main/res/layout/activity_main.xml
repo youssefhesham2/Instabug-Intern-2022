@@ -8,11 +8,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mainactivity.MainActivity">
+        android:fillViewport="true"
+        tools:context=".MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="5dp">
 
             <LinearLayout
@@ -45,62 +47,123 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/send_button_text" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/body_layout"
+                android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#F1FEFF"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/url_layout">
 
-                <TextView
-                    android:id="@+id/tv_body_title"
-                    style="@style/TextAppearance.AppCompat.Title"
+                <LinearLayout
+                    android:id="@+id/body_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/body_title"
-                    android:textColor="#000" />
+                    android:background="#F1FEFF"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                <EditText
-                    android:id="@+id/edt_body"
+                    <TextView
+                        android:id="@+id/tv_body_title"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/body_title"
+                        android:textColor="#000" />
+
+                    <EditText
+                        android:id="@+id/edt_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/body_field_hint"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:minLines="2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/param_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/body_field_hint"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="2" />
+                    android:layout_marginTop="10dp"
+                    android:background="#F1FEFF"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_Params_title"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/params_title"
+                        android:textColor="#000" />
+
+                    <LinearLayout
+                        android:id="@+id/param_form"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!--include param item hear-->
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_add_new_param"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_add_new" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/header_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#F1FEFF"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_headers_title"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_title"
+                        android:textColor="#000" />
+
+                    <LinearLayout
+                        android:id="@+id/header_form"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!--include header item hear-->
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_add_new_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/header_add_new" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/header_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#F1FEFF"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/body_layout">
-
-                <TextView
-                    android:id="@+id/tv_headers_title"
-                    style="@style/TextAppearance.AppCompat.Title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/header_title"
-                    android:textColor="#000" />
-
-                <include layout="@layout/header_item" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_add_new_header"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/header_add_new"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/header_layout" />
+                android:layout_margin="30dp"
+                app:backgroundTint="@color/design_default_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:srcCompat="@drawable/history"
+                app:tint="@color/white" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

@@ -8,6 +8,13 @@
     <string name="header_add_new">add new</string>
     <string name="header_key_hint">Key</string>
     <string name="header_value_hint">value</string>
+    <string name="params_title">Query Params</string>
+    <string name="status_title">Status</string>
+    <string name="request_headers">Request Headers</string>
+    <string name="response_headers">Response Headers</string>
+    <string name="query_param">Query Parameters</string>
+    <string name="Request_body">Request Parameters</string>
+    <string name="Response_body">Response body</string>
 
     <string-array name="spinnerItems">
         <item>GET</item>

@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InstabugIntern2022">
         <activity
+            android:name=".History.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".displayactivity.DisplayActivity"
+            android:exported="false"></activity>
+        <activity
             android:name=".mainactivity.MainActivity"
             android:exported="true">
             <intent-filter>
