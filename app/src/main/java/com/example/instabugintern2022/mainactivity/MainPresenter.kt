@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class MainPresenter constructor(
-    private var mainUseCase: MainUseCase,
-    private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var mainUseCase: MainUseCase?,
+    private var executor: ExecutorService? = Executors.newSingleThreadExecutor()
 ) {
     private var position: Int = 0
     private var view: MainView? = null
@@ -44,9 +44,10 @@ class MainPresenter constructor(
     }
 
     private fun sendPostRequest(requestDomainEntity: RequestEntity) {
+        url = requestDomainEntity.url
         val response =
-            executor.submit(Callable { mainUseCase.sendPostRequest(requestDomainEntity) })
-                .get()
+            executor?.submit(Callable { mainUseCase?.sendPostRequest(requestDomainEntity) })
+                ?.get()
         when (response) {
             is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
 
@@ -61,8 +62,8 @@ class MainPresenter constructor(
     private fun sendGetRequest(requestDomainEntity: RequestEntity) {
         url = requestDomainEntity.url
         val response =
-            executor.submit(Callable { mainUseCase.sendGetRequest(requestDomainEntity) })
-                .get()
+            executor?.submit(Callable { mainUseCase?.sendGetRequest(requestDomainEntity) })
+                ?.get()
         when (response) {
             is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
 
@@ -86,12 +87,12 @@ class MainPresenter constructor(
     }
 
     fun onClickHistoryBtn() {
-        val cacheList = mainUseCase.getCacheData()
-        view?.intentToHistoryActivity(cacheList)
+        val cacheList = mainUseCase?.getCacheData()
+        cacheList?.let { view?.intentToHistoryActivity(it) }
     }
 
     private fun onSuccessRequest(responseEntity: ResponseEntity) {
-        mainUseCase.cacheData(url, responseEntity)
+        mainUseCase?.cacheData(url, responseEntity)
         view?.progressDismiss()
         view?.intentToDisplayActivity(responseEntity)
     }
@@ -102,7 +103,7 @@ class MainPresenter constructor(
     }
 
     private fun onFailureRequest(responseEntity: ResponseEntity) {
-        mainUseCase.cacheData(url, responseEntity)
+        mainUseCase?.cacheData(url, responseEntity)
         view?.progressDismiss()
         view?.intentToDisplayActivity(responseEntity)
     }
@@ -110,5 +111,11 @@ class MainPresenter constructor(
     private fun onException(exception: Throwable) {
         view?.progressDismiss()
         view?.snackbar(exception.localizedMessage, R.color.wrong)
+    }
+
+    fun onDestroy() {
+        view = null
+        executor = null
+        mainUseCase = null
     }
 }

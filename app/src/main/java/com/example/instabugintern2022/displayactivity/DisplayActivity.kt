@@ -46,4 +46,9 @@ class DisplayActivity : AppCompatActivity(), DisplayView {
     override fun setResponseBodyView(responseBody: String) {
         binding.tvResponseBody.text = responseBody
     }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
 }

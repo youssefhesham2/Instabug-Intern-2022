@@ -189,4 +189,9 @@ class MainActivity : AppCompatActivity(), MainView {
         intent.putExtra("RESPONSES_HISTORY", responseEntityList)
         startActivity(intent)
     }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
 }

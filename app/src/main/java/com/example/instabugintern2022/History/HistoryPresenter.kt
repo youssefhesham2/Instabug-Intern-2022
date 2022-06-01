@@ -9,8 +9,13 @@ class HistoryPresenter {
         this.view = view
         getBundleData()
     }
-    private fun getBundleData(){
-        var responseEntityList=view?.getBundleData()
+
+    private fun getBundleData() {
+        var responseEntityList = view?.getBundleData()
         responseEntityList?.let { view?.notifyDataSetChanged(it) }
+    }
+
+    fun onDestroy() {
+        view = null
     }
 }

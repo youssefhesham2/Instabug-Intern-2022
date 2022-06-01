@@ -35,4 +35,9 @@ class HistoryActivity : AppCompatActivity(), HistoryView {
     override fun notifyDataSetChanged(responseEntityList: ArrayList<ResponseEntity>) {
         adapter.setResponseEntityList(responseEntityList)
     }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
 }

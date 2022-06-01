@@ -3,7 +3,7 @@ package com.example.instabugintern2022.displayactivity
 import com.example.domain.entities.ResponseEntity
 import com.example.domain.usecases.DisplayUseCase
 
-class DisplayPresenter constructor(private var displayUseCase: DisplayUseCase = DisplayUseCase()) {
+class DisplayPresenter constructor(private var displayUseCase: DisplayUseCase? = DisplayUseCase()) {
     private var view: DisplayView? = null
     private var responseEntity: ResponseEntity? = null
     fun onAttached(view: DisplayView) {
@@ -21,7 +21,7 @@ class DisplayPresenter constructor(private var displayUseCase: DisplayUseCase = 
         val requestBody = "${responseEntity?.requestBody}"
         val responseBody = "${responseEntity?.responseBody}"
         val params =
-            responseEntity?.requestParam?.let { displayUseCase.convertParamListToString(it) }
+            responseEntity?.requestParam?.let { displayUseCase?.convertParamListToString(it) }
 
         view?.setStatusView(status)
         view?.setRequestHeaderView(requestHeaders)
@@ -34,5 +34,11 @@ class DisplayPresenter constructor(private var displayUseCase: DisplayUseCase = 
             view?.changeQueryParamViewTitleTo("Query Parameters")
             view?.setQueryParamView(params.toString())
         }
+    }
+
+    fun onDestroy() {
+        view = null
+        displayUseCase = null
+        responseEntity = null
     }
 }
