@@ -398,7 +398,7 @@ class MainUseCaseTest {
             listOf(HeaderEntity("key", "value"), HeaderEntity("key2", "value2"))
 
         //Act
-        val result = MainUseCase(fakeMainRepository).filterEmptyHeaders(fakeParamList)
+        val result = MainUseCase(fakeMainRepository).filterEmptyParam(fakeParamList)
 
         //Assertion
         assertEquals(expected, result)

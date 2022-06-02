@@ -2,6 +2,8 @@ package com.example.instabugintern2022.History
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.domain.entities.ResponseEntity
 import com.example.instabugintern2022.R
@@ -21,6 +23,7 @@ class HistoryActivity : AppCompatActivity(), HistoryView {
         presenter = HistoryPresenter()
 
         presenter.onAttached(this)
+        setupSpinner()
         initAdapter()
     }
 
@@ -34,6 +37,22 @@ class HistoryActivity : AppCompatActivity(), HistoryView {
 
     override fun notifyDataSetChanged(responseEntityList: ArrayList<ResponseEntity>) {
         adapter.setResponseEntityList(responseEntityList)
+    }
+
+    private fun setupSpinner() {
+        binding.spinnerFilterRequestType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    presenter.onSpinnerSelectedItem(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
     }
 
     override fun onDestroy() {
