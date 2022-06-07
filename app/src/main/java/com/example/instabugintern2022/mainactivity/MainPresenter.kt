@@ -1,18 +1,20 @@
 package com.example.instabugintern2022.mainactivity
 
+import android.os.Handler
+import android.os.Looper
 import com.example.domain.entities.HeaderEntity
 import com.example.domain.entities.RequestEntity
 import com.example.domain.entities.ResponseEntity
 import com.example.domain.usecases.MainUseCase
 import com.example.domain.utils.ResultData
 import com.example.instabugintern2022.R
-import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class MainPresenter constructor(
     private var mainUseCase: MainUseCase?,
-    private var executor: ExecutorService? = Executors.newSingleThreadExecutor()
+    private var executor: ExecutorService? = Executors.newSingleThreadExecutor(),
+    private var handler: Handler? = Handler(Looper.getMainLooper())
 ) {
     private var position: Int = 0
     private var view: MainView? = null
@@ -30,7 +32,7 @@ class MainPresenter constructor(
     }
 
     fun onClickSendRequestBtn() {
-        view?.progressShow()
+        view?.loadingDialogShow()
         val internetConnection = view?.getUserInternetConnectionState() ?: false
         val url = view?.getUrFromUrlView() ?: ""
         val headers = view?.getHeaderListFromLayout() ?: ArrayList<HeaderEntity>()
@@ -45,33 +47,37 @@ class MainPresenter constructor(
 
     private fun sendPostRequest(requestDomainEntity: RequestEntity) {
         url = requestDomainEntity.url
-        val response =
-            executor?.submit(Callable { mainUseCase?.sendPostRequest(requestDomainEntity) })
-                ?.get()
-        when (response) {
-            is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
+        executor?.execute {
+            val response = mainUseCase?.sendPostRequest(requestDomainEntity)
+            handler?.post {
+                when (response) {
+                    is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
 
-            is ResultData.InvalidData -> onInvalidData(response.message)
+                    is ResultData.InvalidData -> onInvalidData(response.message)
 
-            is ResultData.Failure<*> -> onFailureRequest(response.result as ResponseEntity)
+                    is ResultData.Failure<*> -> onFailureRequest(response.result as ResponseEntity)
 
-            is ResultData.Exception -> onException(response.exception)
+                    is ResultData.Exception -> onException(response.exception)
+                }
+            }
         }
     }
 
     private fun sendGetRequest(requestDomainEntity: RequestEntity) {
         url = requestDomainEntity.url
-        val response =
-            executor?.submit(Callable { mainUseCase?.sendGetRequest(requestDomainEntity) })
-                ?.get()
-        when (response) {
-            is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
+        executor?.execute {
+            val response = mainUseCase?.sendGetRequest(requestDomainEntity)
+            handler?.post {
+                when (response) {
+                    is ResultData.Successful<*> -> onSuccessRequest(response.result as ResponseEntity)
 
-            is ResultData.InvalidData -> onInvalidData(response.message)
+                    is ResultData.InvalidData -> onInvalidData(response.message)
 
-            is ResultData.Failure<*> -> onFailureRequest(response.result as ResponseEntity)
+                    is ResultData.Failure<*> -> onFailureRequest(response.result as ResponseEntity)
 
-            is ResultData.Exception -> onException(response.exception)
+                    is ResultData.Exception -> onException(response.exception)
+                }
+            }
         }
     }
 
@@ -93,23 +99,23 @@ class MainPresenter constructor(
 
     private fun onSuccessRequest(responseEntity: ResponseEntity) {
         mainUseCase?.cacheData(url, responseEntity)
-        view?.progressDismiss()
+        view?.loadingDialogDismiss()
         view?.intentToDisplayActivity(responseEntity)
     }
 
     private fun onInvalidData(message: String) {
-        view?.progressDismiss()
+        view?.loadingDialogDismiss()
         view?.snackbar(message, R.color.wrong)
     }
 
     private fun onFailureRequest(responseEntity: ResponseEntity) {
         mainUseCase?.cacheData(url, responseEntity)
-        view?.progressDismiss()
+        view?.loadingDialogDismiss()
         view?.intentToDisplayActivity(responseEntity)
     }
 
     private fun onException(exception: Throwable) {
-        view?.progressDismiss()
+        view?.loadingDialogDismiss()
         view?.snackbar(exception.localizedMessage, R.color.wrong)
     }
 
@@ -117,5 +123,6 @@ class MainPresenter constructor(
         view = null
         executor = null
         mainUseCase = null
+        handler = null
     }
 }
