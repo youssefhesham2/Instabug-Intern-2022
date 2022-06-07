@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity(), MainView {
     private lateinit var presenter: MainPresenter
     private lateinit var binding: ActivityMainBinding
+    private lateinit var loadingDialog: AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,11 +38,19 @@ class MainActivity : AppCompatActivity(), MainView {
             MainPresenter(MainUseCase(MainRepositoryImpl(databaseHelper = DatabaseHelper(this))))
 
         presenter.onAttached(this)
+        setupProgressDialog()
         setupOnClickAddNewParamBtn()
         setupOnClickAddNewHeaderBtn()
         setupSpinner()
         setupOnClickSendRequestBtn()
         setupOnClickHistoryBtn()
+    }
+
+    private fun setupProgressDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setView(R.layout.loading_dialog)
+        builder.setCancelable(false)
+        loadingDialog = builder.create()
     }
 
     private fun setupOnClickAddNewParamBtn() {
@@ -82,15 +91,15 @@ class MainActivity : AppCompatActivity(), MainView {
         val connectivityManager =
             this.getSystemService(Context.CONNECTIVITY_SERVICE) as (ConnectivityManager)
         if (Build.VERSION.SDK_INT < 23) {
-            val networkInfo = connectivityManager.getActiveNetworkInfo()
+            val networkInfo = connectivityManager.activeNetworkInfo
             networkInfo?.let { return true } ?: return false
         } else {
-            val network = connectivityManager.getActiveNetwork();
+            val network = connectivityManager.activeNetwork
             network?.let {
-                val nc = connectivityManager.getNetworkCapabilities(network);
+                val nc = connectivityManager.getNetworkCapabilities(network)
                 return (nc?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true || nc?.hasTransport(
                     NetworkCapabilities.TRANSPORT_WIFI
-                ) == true);
+                ) == true)
             }
         }
         return false
@@ -162,14 +171,12 @@ class MainActivity : AppCompatActivity(), MainView {
         binding.bodyLayout.visibility = View.VISIBLE
     }
 
-    override fun progressShow() {
-        binding.btnSendRequest.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
+    override fun loadingDialogShow() {
+        loadingDialog.show()
     }
 
-    override fun progressDismiss() {
-        binding.progressBar.visibility = View.GONE
-        binding.btnSendRequest.visibility = View.VISIBLE
+    override fun loadingDialogDismiss() {
+        loadingDialog.dismiss()
     }
 
     override fun snackbar(message: String, color: Int) {

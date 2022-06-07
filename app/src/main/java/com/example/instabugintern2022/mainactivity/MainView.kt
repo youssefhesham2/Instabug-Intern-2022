@@ -27,9 +27,9 @@ interface MainView {
 
     fun visibleBodyViewVisibility()
 
-    fun progressShow()
+    fun loadingDialogShow()
 
-    fun progressDismiss()
+    fun loadingDialogDismiss()
 
     fun snackbar(message: String, color: Int)
 
